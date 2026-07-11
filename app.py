@@ -10,13 +10,15 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, Response, flash, redirect, render_template, request, session, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "hr_mis.db"
+app = Flask(
+    __name__,
+    template_folder="templates",
+    static_folder="static"
+)
 
-app = Flask(__name__, template_folder=str(BASE_DIR / "templates"), static_folder=str(BASE_DIR / "static"))
-app.secret_key = os.environ.get("HR_MIS_SECRET", "change-this-secret-key")
+app.secret_key = "meiden-hr-mis-secret-key"
 
 SECTIONS = {
     "workforce": {
@@ -195,14 +197,15 @@ def number(value: Any) -> float:
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "")
-        expected_user = os.environ.get("HR_MIS_USER", "admin")
-        expected_password = os.environ.get("HR_MIS_PASSWORD", "admin123")
-        if username == expected_user and password == expected_password:
-            session["user"] = username
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == "admin" and password == "admin123":
+            session["logged_in"] = True
             return redirect(url_for("dashboard"))
-        flash("Invalid username or password.", "error")
+
+        flash("Invalid username or password", "danger")
+
     return render_template("login.html")
 
 
