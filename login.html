@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123a83"><title>Login - Meiden HR MIS</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body class="login-page">
+<div class="login-bg"><span></span><span></span><span></span></div>
+<div class="login-layout">
+  <section class="login-hero">
+    <img src="{{ url_for('static', filename='meiden_logo.png') }}" alt="Meiden logo">
+    <div class="hero-copy"><span class="hero-badge">DIGITAL HR PLATFORM</span><h1>Smarter HR decisions.<br>One connected dashboard.</h1><p>Capture monthly MIS data, monitor workforce trends and generate management-ready insights from one secure portal.</p></div>
+    <div class="hero-stats"><div><b>10</b><span>MIS Modules</span></div><div><b>100%</b><span>Online Process</span></div><div><b>24×7</b><span>Data Access</span></div></div>
+  </section>
+  <section class="login-panel">
+    <div class="login-card">
+      <div class="mobile-login-logo"><img src="{{ url_for('static', filename='meiden_logo.png') }}" alt="Meiden"></div>
+      <span class="login-kicker">Welcome back</span><h2>Sign in to HR MIS</h2><p>Enter your credentials to continue.</p>
+      {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+      <form method="post">
+        <label>Username<div class="input-wrap"><span>👤</span><input name="username" required value="admin" autocomplete="username"></div></label>
+        <label>Password<div class="input-wrap"><span>🔒</span><input id="password" type="password" name="password" required value="admin123" autocomplete="current-password"><button type="button" class="show-pass" onclick="togglePassword()">◉</button></div></label>
+        <button class="btn primary full login-btn" type="submit"><span>Login securely</span><b>→</b></button>
+      </form>
+      <small>Demo credentials: admin / admin123</small>
+    </div>
+  </section>
+</div>
+<script>function togglePassword(){const p=document.getElementById('password');p.type=p.type==='password'?'text':'password'}</script>
+</body></html>

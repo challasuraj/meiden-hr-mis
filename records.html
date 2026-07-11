@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block page_title %}Saved Monthly Records{% endblock %}
+{% block content %}
+<div class="card"><div class="table-wrap"><table class="entry-table"><thead><tr><th>Month</th><th>Updated By</th><th>Last Updated</th><th>Actions</th></tr></thead><tbody>
+{% for row in rows %}<tr><td><b>{{ row.month }}</b></td><td>{{ row.updated_by }}</td><td>{{ row.updated_at }}</td><td><a class="table-link" href="{{ url_for('dashboard', month=row.month) }}">Dashboard</a> · <a class="table-link" href="{{ url_for('entry', section_key='workforce', month=row.month) }}">Edit</a> · <a class="table-link" href="{{ url_for('export_csv', month=row.month) }}">CSV</a></td></tr>{% else %}<tr><td colspan="4">No records yet. Start monthly data entry.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

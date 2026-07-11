@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - HR MIS{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <form method="get" class="inline-form"><label>Dashboard Month<input type="month" name="month" value="{{ month }}"></label><button class="btn primary">View</button></form>
+  <div class="toolbar-actions"><a class="btn" href="{{ url_for('monthly_entry', month=month) }}">Fill MIS Data</a><a class="btn" href="{{ url_for('export_csv', month=month) }}">Export CSV</a></div>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi"><span>Total Employees</span><strong>{{ d.total|int }}</strong><small>Current month</small></div>
+  <div class="kpi"><span>New Joinings</span><strong>{{ d.new_joinings|int }}</strong><small>Added this month</small></div>
+  <div class="kpi"><span>Present Rate</span><strong>{{ d.present|round(1) }}%</strong><small>Attendance</small></div>
+  <div class="kpi"><span>Open Positions</span><strong>{{ d.open_positions|int }}</strong><small>Recruitment</small></div>
+</div>
+
+<div class="dashboard-grid">
+  <section class="card span-4"><div class="card-head"><h3>Employee Composition</h3></div><canvas id="employeeDonut" height="250"></canvas><div class="legend"><span>Permanent: {{ d.permanent|int }}</span><span>Contract: {{ d.contract|int }}</span></div></section>
+  <section class="card span-8"><div class="card-head"><h3>Workforce Overview</h3></div><canvas id="workforceBars" height="250"></canvas></section>
+  <section class="card span-4"><div class="card-head"><h3>Attendance Rate</h3></div><canvas id="attendanceDonut" height="250"></canvas><div class="legend"><span>Present {{ d.present|round(1) }}%</span><span>Absent {{ d.absent|round(1) }}%</span><span>Leave {{ d.leave|round(1) }}%</span></div></section>
+  <section class="card span-4"><div class="card-head"><h3>Recruitment Status</h3></div><canvas id="recruitmentBars" height="250"></canvas></section>
+  <section class="card span-4"><div class="card-head"><h3>Employee Development</h3></div><div class="metric-ring" style="--value:{{ [d.trained,100]|min }}"><strong>{{ d.trained|int }}</strong><span>Employees trained</span></div></section>
+  <section class="card span-8"><div class="card-head"><h3>Department OT Hours</h3></div><canvas id="otBars" height="250"></canvas></section>
+  <section class="card span-4"><div class="card-head"><h3>Action Summary</h3></div><div class="activity"><div><b>{{ d.pending_grievances|int }}</b><span>Pending grievances</span></div><div><b>{{ d.separations|int }}</b><span>Separations</span></div><div><b>{{ d.joinings|int }}</b><span>Recruitment joinings</span></div></div></section>
+</div>
+<script id="dashboard-data" type="application/json">{{ d|tojson }}</script>
+{% endblock %}
+{% block scripts %}<script>window.addEventListener('DOMContentLoaded',()=>initDashboard(JSON.parse(document.getElementById('dashboard-data').textContent)));</script>{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block page_title %}Monthly MIS Data Entry{% endblock %}
+{% block page_subtitle %}Choose the month and enter each HR/Admin section online{% endblock %}
+{% block content %}
+<div class="card form-card">
+  <form method="post" class="month-picker"><label>Select Month<input type="month" name="month" value="{{ month }}" required></label><button class="btn primary">Start / Continue Entry</button></form>
+</div>
+<div class="section-grid">
+{% for key, section in sections.items() %}
+<a class="section-card" href="{{ url_for('entry', section_key=key, month=month) }}"><span>{{ loop.index }}</span><div><b>{{ section.title }}</b><small>Open data entry form</small></div></a>
+{% endfor %}
+</div>
+{% endblock %}

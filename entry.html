@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block page_title %}{{ section.title }}{% endblock %}
+{% block page_subtitle %}Enter and save monthly MIS details{% endblock %}
+{% block content %}
+<div class="toolbar"><a class="btn" href="{{ url_for('monthly_entry', month=month) }}">← All Sections</a><a class="btn" href="{{ url_for('dashboard', month=month) }}">View Dashboard</a></div>
+<form method="post" class="card form-card">
+  <input type="hidden" name="month" value="{{ month }}">
+  <div class="form-header"><label>Reporting Month<input type="month" value="{{ month }}" disabled></label><span class="save-note">Values are saved section-wise.</span></div>
+  {% if section.table %}
+  <div class="table-wrap"><table class="entry-table"><thead><tr><th>{% if section_key=='compliance' %}Compliance Activity{% else %}Category{% endif %}</th>{% for col in section.columns %}<th>{{ col }}</th>{% endfor %}</tr></thead><tbody>
+  {% for row in section.rows %}<tr><td><b>{{ row }}</b></td>{% for col in section.columns %}<td>
+    {% set old = values.get(row,{}).get(col,'') %}
+    {% if section.status_table and col=='Status' %}<select name="{{ row }}__{{ col }}"><option value="">Select</option><option {% if old=='Completed' %}selected{% endif %}>Completed</option><option {% if old=='Pending' %}selected{% endif %}>Pending</option><option {% if old=='Not Applicable' %}selected{% endif %}>Not Applicable</option></select>
+    {% elif section.status_table and col=='Due Date' %}<input type="date" name="{{ row }}__{{ col }}" value="{{ old }}">
+    {% else %}<input type="number" step="0.01" min="0" name="{{ row }}__{{ col }}" value="{{ old }}">{% endif %}
+  </td>{% endfor %}</tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}
+  <div class="form-grid">{% for key, label, type in section.fields %}<label>{{ label }}<input type="{{ type }}" step="0.01" name="{{ key }}" value="{{ values.get(key,'') }}" min="0"></label>{% endfor %}</div>
+  {% endif %}
+  <div class="form-actions"><button class="btn primary" type="submit">Save {{ section.title }}</button></div>
+</form>
+{% endblock %}

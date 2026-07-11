@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123a83">
+  <title>{% block title %}Meiden HR MIS Portal{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page-loader" id="pageLoader"><div class="loader-logo"><img src="{{ url_for('static', filename='meiden_logo.png') }}" alt="Meiden"><span></span></div></div>
+<div class="app-shell" id="appShell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img class="brand-logo" src="{{ url_for('static', filename='meiden_logo.png') }}" alt="Meiden logo">
+      <div class="brand-copy"><b>HR & Admin</b><span>MIS Portal</span></div>
+    </div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint=='dashboard' %}active{% endif %}"><i>▦</i><span>Dashboard</span></a>
+      <a href="{{ url_for('monthly_entry') }}" class="{% if request.endpoint in ['monthly_entry','entry'] %}active{% endif %}"><i>✎</i><span>Data Entry</span></a>
+      <a href="{{ url_for('records') }}" class="{% if request.endpoint=='records' %}active{% endif %}"><i>▤</i><span>Records</span></a>
+      <div class="nav-label">MIS Sections</div>
+      {% set icons=['👥','◉','☂','◷','▣','✓','♟','♨','◈','♡'] %}
+      {% for key, section in sections.items() %}
+      <a class="section-link" href="{{ url_for('entry', section_key=key, month=request.args.get('month', current_month)) }}"><i>{{ icons[loop.index0] }}</i><span>{{ section.title }}</span></a>
+      {% endfor %}
+    </nav>
+    <div class="sidebar-footer">
+      <div class="system-online"><span></span> System Online</div>
+      <a class="logout" href="{{ url_for('logout') }}"><i>↪</i><span>Logout</span></a>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <div>
+          <div class="eyebrow">MEIDEN T&D (INDIA) LIMITED</div>
+          <h1>{% block page_title %}HR & Admin MIS{% endblock %}</h1>
+          <p>{% block page_subtitle %}Online data entry and intelligent management dashboard{% endblock %}</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="live-clock" id="liveClock"></div>
+        <div class="notification">🔔<b>3</b></div>
+        <div class="user-chip"><span class="avatar">HR</span><span><b>{{ session.get('user','HR Team') }}</b><small>Administrator</small></span></div>
+      </div>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<div class="alert {{ category }} fade-in">{{ message }}</div>{% endfor %}
+    {% endwith %}
+    <div class="page-content">{% block content %}{% endblock %}</div>
+    <footer>© 2026 Meiden T&D (India) Limited · HR & Admin MIS Portal</footer>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
