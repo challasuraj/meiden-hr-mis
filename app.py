@@ -197,14 +197,15 @@ def number(value: Any) -> float:
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
 
         if username == "admin" and password == "admin123":
             session["logged_in"] = True
+            session["username"] = username
             return redirect(url_for("dashboard"))
 
-        flash("Invalid username or password", "danger")
+        flash("Invalid username or password.", "danger")
 
     return render_template("login.html")
 
